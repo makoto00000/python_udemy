@@ -26,7 +26,8 @@ with open('db/data.pickle', 'rb') as f:
     print(type(data_loaded['d']))
 
 # 以下のようにpythonのデータのまま取り出すことができる
-# {'a': [1, 2, 3], 'b': ('test', 'test'), 'c': {'key': 'value'}, 'd': <__main__.T object at 0xffff958e3f70>}
+# {'a': [1, 2, 3], 'b': ('test', 'test'), 'c': {'key': 'value'},
+# 'd': <__main__.T object at 0xffff958e3f70>}
 # test
 # <class 'list'>
 # <class 'tuple'>
