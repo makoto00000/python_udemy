@@ -34,8 +34,14 @@ class TestCal(object):
         # del self.cal
 
     # @pytest.mark.skip(reason='skip!')
-    @pytest.mark.skipif(is_release is True, reason='skip!')
-    def test_add_num_and_double(self):
+    # @pytest.mark.skipif(is_release is True, reason='skip!')
+    def test_add_num_and_double(self, request):
+        os_name = request.config.getoption('--os-name')
+        print(os_name)
+        if os_name == 'mac':
+            print('ls')
+        elif os_name == 'windows':
+            print('dir')
         assert self.cal.add_num_and_double(1, 1) == 4
 
     # withの中でValueエラーが発生するかどうか
@@ -43,7 +49,7 @@ class TestCal(object):
         with pytest.raises(ValueError):
             self.cal.add_num_and_double('1', '1')
 
-# 「pytest -sv test/pytest_test.py」を実行する。
+# 「pytest test/pytest_test.py --os_name=mac -sv」を実行する。
 
 # sオプション print文を表示
 # vオプション 詳細表示（skip表示）
