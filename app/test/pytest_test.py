@@ -1,3 +1,4 @@
+import os
 import pytest
 
 import calculation
@@ -16,6 +17,7 @@ class TestCal(object):
     def setup_class(cls):
         print('test start')
         cls.cal = calculation.Cal()
+        cls.test_file_name = 'test.txt'
 
     # このクラスのテスト終了時に実行
     @classmethod
@@ -43,6 +45,14 @@ class TestCal(object):
         elif os_name == 'windows':
             print('dir')
         assert self.cal.add_num_and_double(1, 1) == 4
+
+    # tmpdirで一時的なディレクトリを扱える
+    def test_save(self, tmpdir):
+        print(tmpdir)  # /tmp/pytest-of-root/pytest-0/test_tmpdir0
+        self.cal.save(tmpdir, self.test_file_name)
+        test_file_path = os.path.join(
+            tmpdir, self.test_file_name)
+        assert os.path.exists(test_file_path) is True
 
     # withの中でValueエラーが発生するかどうか
     def test_add_num_and_double_raise(self):
