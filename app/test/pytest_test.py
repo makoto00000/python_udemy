@@ -17,6 +17,7 @@ class TestCal(object):
     def setup_class(cls):
         print('test start')
         cls.cal = calculation.Cal()
+        cls.test_dir = '/tmp/test_dir'
         cls.test_file_name = 'test.txt'
 
     # このクラスのテスト終了時に実行
@@ -24,6 +25,9 @@ class TestCal(object):
     def teardown_class(cls):
         print('test end')
         cls.cal = calculation.Cal()
+        import shutil
+        if os.path.exists(cls.test_dir):
+            shutil.rmtree(cls.test_dir)
 
     # 各テストの前に実行
     def setup_method(self, method):
@@ -63,7 +67,16 @@ class TestCal(object):
         with pytest.raises(ValueError):
             self.cal.add_num_and_double('1', '1')
 
+    def test_save_no_dir(self):
+        self.cal.save(self.test_dir, self.test_file_name)
+        test_file_path = os.path.join(
+            self.test_dir, self.test_file_name)
+        assert os.path.exists(test_file_path) is True
+
 # 「pytest test/pytest_test.py --os_name=mac -sv」を実行する。
 
 # sオプション print文を表示
 # vオプション 詳細表示（skip表示）
+
+# テストカバレージの確認
+# pytest --cov=calculation --cov-report term-missing test/pytest_test.py
