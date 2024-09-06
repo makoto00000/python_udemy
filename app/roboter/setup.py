@@ -24,5 +24,6 @@ setup(
     package_dir={'': 'roboter/app'},
     tests_require=['pytest'],
     package_data={'roboter': ['templates/*.txt']},
+    install_requires=['termcolor==1.1.0'],
     cmdclass={'test': PyTest}
 )
