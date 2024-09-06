@@ -54,6 +54,10 @@ class TestCal(object):
             tmpdir, self.test_file_name)
         assert os.path.exists(test_file_path) is True
 
+    # conftestに定義した独自のfixture「csv_file」
+    def test_csv(self, csv_file):
+        print(csv_file)
+
     # withの中でValueエラーが発生するかどうか
     def test_add_num_and_double_raise(self):
         with pytest.raises(ValueError):
