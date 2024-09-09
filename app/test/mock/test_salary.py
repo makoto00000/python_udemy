@@ -102,6 +102,21 @@ class TestSalary(unittest.TestCase):
         with self.assertRaises(ValueError):
             s.calculation_salary()
 
+    # spec（クラスごとmock化。メソッドが何を返すかをテスト関数内で定義する）
+    @mock.patch('salary.ThirdPartyBonusRestApi', spec=True)
+    def test_calculation_salary_class(self, mock_rest):
+        # mock_rest = MockRest()  # この場合は引数をMockRestとする
+        # 上と同じ意味（下は分かりにくいが公式の書き方）
+        # 右辺のmock_restは引数の方
+        mock_rest = mock_rest.return_value
+        mock_rest.bonus_price.return_value = 1
+        mock_rest.get_api_name.return_value = 'Money'
+
+        s = salary.Salary(year=2017)
+        salary_price = s.calculation_salary()
+
+        self.assertEqual(salary_price, 101)
+        mock_rest.bonus_price.assert_called()
 
 
 if __name__ == '__main__':
