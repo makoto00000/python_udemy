@@ -104,7 +104,8 @@ class TestSalary(unittest.TestCase):
 
     # spec（クラスごとmock化。メソッドが何を返すかをテスト関数内で定義する）
     @mock.patch('salary.ThirdPartyBonusRestApi', spec=True)
-    def test_calculation_salary_class(self, mock_rest):
+    @mock.patch('salary.Salary.get_from_boss')
+    def test_calculation_salary_class(self, mock_boss, mock_rest):
         # mock_rest = MockRest()  # この場合は引数をMockRestとする
         # 上と同じ意味（下は分かりにくいが公式の書き方）
         # 右辺のmock_restは引数の方
@@ -112,12 +113,16 @@ class TestSalary(unittest.TestCase):
         mock_rest.bonus_price.return_value = 1
         mock_rest.get_api_name.return_value = 'Money'
 
+        mock_boss.return_value = 10
+
         s = salary.Salary(year=2017)
         salary_price = s.calculation_salary()
 
-        self.assertEqual(salary_price, 101)
+        self.assertEqual(salary_price, 111)
         mock_rest.bonus_price.assert_called()
 
 
 if __name__ == '__main__':
     unittest.main()
+
+# mockは自分で定義したメソッドに対しても書くことはできるが、外部APIに関するものや、未完成のものに対して書くのが一般的。全てmock化するようなコードだと、テストコードで間違えたmockを作ると、本来のコードは間違っていないのに、テストコードにバグが発生しているという状況になってしまう。
