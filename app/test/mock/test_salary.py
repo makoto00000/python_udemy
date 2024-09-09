@@ -65,6 +65,44 @@ class TestSalary(unittest.TestCase):
         self.assertEqual(salary_price, 101)
         self.mock_bonus.assert_called()
 
+    # side effect 複雑な処理で値を返したい場合
+    def test_calculation_salary_patch_side_effect(self):
+        # def f(year):
+            # return year
+        # self.mock_bonus.side_effect = f(1)
+        # lambdaで1行で書ける
+        # self.mock_bonus.side_effect = lambda year: 1
+        # s = salary.Salary(year=2017)
+        # salary_price = s.calculation_salary()
+        # self.assertEqual(salary_price, 101)
+
+        # APIでエラーになったときのテスト
+        # self.mock_bonus.side_effect = ConnectionRefusedError
+        # s = salary.Salary(year=2017)
+        # salary_price = s.calculation_salary()
+        # self.assertEqual(salary_price, 100)
+
+        # 1回目に呼ばれたとき1を返す、2回目は2...
+        self.mock_bonus.side_effect = [
+          1,
+          2,
+          3,
+          ValueError('Bankrupt!!!')
+        ]
+        s = salary.Salary(year=2017)
+        salary_price = s.calculation_salary()
+        self.assertEqual(salary_price, 101)
+        s = salary.Salary(year=2017)
+        salary_price = s.calculation_salary()
+        self.assertEqual(salary_price, 102)
+        s = salary.Salary(year=2017)
+        salary_price = s.calculation_salary()
+        self.assertEqual(salary_price, 103)
+        s = salary.Salary(year=200)
+        with self.assertRaises(ValueError):
+            s.calculation_salary()
+
+
 
 if __name__ == '__main__':
     unittest.main()

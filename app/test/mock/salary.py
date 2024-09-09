@@ -16,5 +16,8 @@ class Salary(object):
     def calculation_salary(self):
         bonus = 0
         if self.year < 2020:
-            bonus = self.bonus_api.bonus_price(year=self.year)
+            try:
+                bonus = self.bonus_api.bonus_price(year=self.year)
+            except ConnectionRefusedError:
+                bonus = 0
         return self.base + bonus
